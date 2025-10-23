@@ -1,0 +1,47 @@
+================================================================================
+                    URGENT: UPLOAD THESE FILES TO HOSTINGER
+================================================================================
+
+Your local files have been successfully compiled with the production URL
+(https://smashburgertz.com), but you need to upload them to your server!
+
+FILES TO UPLOAD TO HOSTINGER:
+------------------------------
+
+1. public/js/app.js                    ← MOST IMPORTANT!
+2. public/css/app.css
+3. public/mix-manifest.json
+4. public/serviceworker.js              ← Fixed service worker error
+5. public/storage/31/fav-icon.png       ← Fixed favicon error
+
+HOW TO UPLOAD:
+--------------
+Using FileZilla, cPanel File Manager, or your hosting control panel:
+
+1. Go to your website's root directory (usually public_html/)
+2. Navigate to: public/js/
+3. Replace the existing app.js with your new local app.js
+4. Navigate to: public/css/
+5. Replace the existing app.css with your new local app.css
+6. Navigate to: public/
+7. Replace the existing mix-manifest.json with your new local mix-manifest.json
+8. Replace the existing serviceworker.js with your new local serviceworker.js
+9. Navigate to: public/storage/31/
+10. Upload the fav-icon.png file
+
+AFTER UPLOADING:
+----------------
+1. Clear your browser cache (Ctrl + Shift + Delete)
+2. Hard refresh your website (Ctrl + F5)
+3. Check browser console - API calls should now go to https://smashburgertz.com
+
+IMPORTANT NOTES:
+----------------
+- The files are already compiled with the correct production URL
+- You just need to upload them to replace the old files
+- Make sure your server's .env file has: APP_URL=https://smashburgertz.com
+- The issue is NOT with npm on the server - it's just that you need to upload
+  the compiled files
+
+================================================================================
+
