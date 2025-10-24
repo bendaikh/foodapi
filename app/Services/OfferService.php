@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\OfferRequest;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\PaginateRequest;
 use App\Libraries\QueryExceptionLibrary;
 use App\Http\Requests\ChangeImageRequest;
@@ -86,28 +87,43 @@ class OfferService
             $orderType   = $request->get('order_type') ?? 'desc';
             $limit       = $request->get('limit') ? $request->get('limit') : '';
 
-            return Offer::with('items')->where('end_date', '>=', now()->toDateTimeString())->where(function ($query) use ($requests) {
-                foreach ($requests as $key => $request) {
-                    if (in_array($key, $this->offerFilter)) {
-                        $query->where($key, 'like', '%' . $request . '%');
-                    }
+            // Cache active offers for frontend
+            $shouldCache = $method === 'get' && !empty($limit);
+            
+            if ($shouldCache) {
+                $cacheKey = 'active_offers_' . md5(json_encode($requests));
+                return Cache::remember($cacheKey, 600, function () use ($requests, $orderColumn, $orderType, $method, $methodValue, $limit) {
+                    return $this->executeActiveQuery($requests, $orderColumn, $orderType, $method, $methodValue, $limit);
+                });
+            }
 
-                    if (in_array($key, $this->exceptFilter)) {
-                        $explodes = explode('|', $request);
-                        if (is_array($explodes)) {
-                            foreach ($explodes as $explode) {
-                                $query->where('id', '!=', $explode);
-                            }
-                        }
-                    }
-                }
-            })->limit($limit)->orderBy($orderColumn, $orderType)->$method(
-                $methodValue
-            );
+            return $this->executeActiveQuery($requests, $orderColumn, $orderType, $method, $methodValue, $limit);
         } catch (Exception $exception) {
             Log::info($exception->getMessage());
             throw new Exception(QueryExceptionLibrary::message($exception), 422);
         }
+    }
+
+    private function executeActiveQuery($requests, $orderColumn, $orderType, $method, $methodValue, $limit)
+    {
+        return Offer::with('items')->where('end_date', '>=', now()->toDateTimeString())->where(function ($query) use ($requests) {
+            foreach ($requests as $key => $request) {
+                if (in_array($key, $this->offerFilter)) {
+                    $query->where($key, 'like', '%' . $request . '%');
+                }
+
+                if (in_array($key, $this->exceptFilter)) {
+                    $explodes = explode('|', $request);
+                    if (is_array($explodes)) {
+                        foreach ($explodes as $explode) {
+                            $query->where('id', '!=', $explode);
+                        }
+                    }
+                }
+            }
+        })->limit($limit)->orderBy($orderColumn, $orderType)->$method(
+            $methodValue
+        );
     }
 
     /**

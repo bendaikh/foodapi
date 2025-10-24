@@ -143,4 +143,16 @@ class DashboardController extends AdminController
             return response(['status' => false, 'message' => $exception->getMessage()], 422);
         }
     }
+
+    /**
+     * Get all overview stats in a single optimized call
+     */
+    public function overviewStats(): \Illuminate\Http\Response | array | \Illuminate\Contracts\Foundation\Application | \Illuminate\Contracts\Routing\ResponseFactory
+    {
+        try {
+            return ['data' => $this->dashboardService->getOverviewStats()];
+        } catch (Exception $exception) {
+            return response(['status' => false, 'message' => $exception->getMessage()], 422);
+        }
+    }
 }

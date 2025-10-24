@@ -12,6 +12,7 @@ use App\Models\ItemVariation;
 use App\Http\Requests\ItemRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\PaginateRequest;
 use App\Libraries\QueryExceptionLibrary;
 use App\Http\Requests\ChangeImageRequest;
@@ -233,7 +234,13 @@ class ItemService
     public function featuredItems()
     {
         try {
-            return Item::with('media','category','offer')->where(['is_featured' => Ask::YES, 'status' => Status::ACTIVE])->inRandomOrder()->limit(8)->get();
+            return Cache::remember('featured_items', 600, function () {
+                return Item::with('media','category','offer')
+                    ->where(['is_featured' => Ask::YES, 'status' => Status::ACTIVE])
+                    ->inRandomOrder()
+                    ->limit(8)
+                    ->get();
+            });
         } catch (Exception $exception) {
             Log::info($exception->getMessage());
             throw new Exception(QueryExceptionLibrary::message($exception), 422);
@@ -243,7 +250,15 @@ class ItemService
     public function mostPopularItems()
     {
         try {
-            return Item::with('media', 'category','offer')->withCount('orders')->where(['status' => Status::ACTIVE])->orderBy('orders_count', 'desc')->limit(6)->get();
+            return Cache::remember('popular_items', 600, function () {
+                // Optimize: Use a subquery to get order counts more efficiently
+                return Item::with('media', 'category','offer')
+                    ->select('items.*', DB::raw('(SELECT COUNT(*) FROM order_items WHERE order_items.item_id = items.id) as orders_count'))
+                    ->where(['status' => Status::ACTIVE])
+                    ->orderBy('orders_count', 'desc')
+                    ->limit(6)
+                    ->get();
+            });
         } catch (Exception $exception) {
             Log::info($exception->getMessage());
             throw new Exception(QueryExceptionLibrary::message($exception), 422);

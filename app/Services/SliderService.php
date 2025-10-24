@@ -6,6 +6,7 @@ namespace App\Services;
 use Exception;
 use App\Models\Slider;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\SliderRequest;
 use App\Http\Requests\PaginateRequest;
 use App\Libraries\QueryExceptionLibrary;
@@ -34,28 +35,43 @@ class SliderService
             $orderColumn = $request->get('order_column') ?? 'id';
             $orderType   = $request->get('order_type') ?? 'desc';
 
-            return Slider::with('media')->where(function ($query) use ($requests) {
-                foreach ($requests as $key => $request) {
-                    if (in_array($key, $this->sliderFilter)) {
-                        $query->where($key, 'like', '%' . $request . '%');
-                    }
+            // Cache active sliders for frontend
+            $shouldCache = $method === 'get' && isset($requests['status']);
+            
+            if ($shouldCache) {
+                $cacheKey = 'sliders_' . md5(json_encode($requests));
+                return Cache::remember($cacheKey, 600, function () use ($requests, $orderColumn, $orderType, $method, $methodValue) {
+                    return $this->executeQuery($requests, $orderColumn, $orderType, $method, $methodValue);
+                });
+            }
 
-                    if (in_array($key, $this->exceptFilter)) {
-                        $explodes = explode('|', $request);
-                        if (is_array($explodes)) {
-                            foreach ($explodes as $explode) {
-                                $query->where('id', '!=', $explode);
-                            }
-                        }
-                    }
-                }
-            })->orderBy($orderColumn, $orderType)->$method(
-                $methodValue
-            );
+            return $this->executeQuery($requests, $orderColumn, $orderType, $method, $methodValue);
         } catch (Exception $exception) {
             Log::info($exception->getMessage());
             throw new Exception(QueryExceptionLibrary::message($exception), 422);
         }
+    }
+
+    private function executeQuery($requests, $orderColumn, $orderType, $method, $methodValue)
+    {
+        return Slider::with('media')->where(function ($query) use ($requests) {
+            foreach ($requests as $key => $request) {
+                if (in_array($key, $this->sliderFilter)) {
+                    $query->where($key, 'like', '%' . $request . '%');
+                }
+
+                if (in_array($key, $this->exceptFilter)) {
+                    $explodes = explode('|', $request);
+                    if (is_array($explodes)) {
+                        foreach ($explodes as $explode) {
+                            $query->where('id', '!=', $explode);
+                        }
+                    }
+                }
+            }
+        })->orderBy($orderColumn, $orderType)->$method(
+            $methodValue
+        );
     }
 
     /**

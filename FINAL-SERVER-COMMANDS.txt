@@ -1,0 +1,43 @@
+================================================================================
+           RUN THESE COMMANDS ON YOUR HOSTINGER SERVER VIA SSH
+================================================================================
+
+The app.js file has been successfully pushed to GitHub!
+Now you need to pull it on your server and clear caches.
+
+COMMANDS TO RUN:
+----------------
+
+1. Pull the latest changes:
+   git pull origin master
+
+2. Clear Laravel caches:
+   php artisan config:clear
+   php artisan cache:clear
+   php artisan route:clear
+   php artisan view:clear
+
+3. Make sure your server's .env file has:
+   APP_URL=https://smashburgertz.com
+
+4. Verify the storage link exists:
+   php artisan storage:link
+
+5. Set proper permissions (if needed):
+   chmod -R 755 storage/
+   chmod -R 755 public/storage/
+
+AFTER RUNNING THESE COMMANDS:
+------------------------------
+1. Clear your browser cache (Ctrl + Shift + Delete)
+2. Hard refresh your website (Ctrl + F5)
+3. Check browser console
+
+YOU SHOULD SEE:
+- API calls going to: https://smashburgertz.com/api/...
+- No more 127.0.0.1:8000 errors
+- Data loading properly
+
+================================================================================
+
+

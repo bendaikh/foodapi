@@ -9,6 +9,7 @@ use App\Models\ItemCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\PaginateRequest;
 use App\Libraries\QueryExceptionLibrary;
 use App\Http\Requests\ItemCategoryRequest;
@@ -38,28 +39,43 @@ class ItemCategoryService
             $orderColumn = $request->get('order_column') ?? 'id';
             $orderType   = $request->get('order_type') ?? 'desc';
 
-            return ItemCategory::with('media')->where(function ($query) use ($requests) {
-                foreach ($requests as $key => $request) {
-                    if (in_array($key, $this->itemCateFilter)) {
-                        $query->where($key, 'like', '%' . $request . '%');
-                    }
+            // Cache active categories list for frontend (common case)
+            $shouldCache = $method === 'get' && isset($requests['status']) && empty($requests['name']) && empty($requests['slug']);
+            
+            if ($shouldCache) {
+                $cacheKey = 'item_categories_' . md5(json_encode($requests));
+                return Cache::remember($cacheKey, 600, function () use ($requests, $orderColumn, $orderType, $method, $methodValue) {
+                    return $this->executeQuery($requests, $orderColumn, $orderType, $method, $methodValue);
+                });
+            }
 
-                    if (in_array($key, $this->exceptFilter)) {
-                        $explodes = explode('|', $request);
-                        if (is_array($explodes)) {
-                            foreach ($explodes as $explode) {
-                                $query->where('id', '!=', $explode);
-                            }
-                        }
-                    }
-                }
-            })->orderBy($orderColumn, $orderType)->$method(
-                $methodValue
-            );
+            return $this->executeQuery($requests, $orderColumn, $orderType, $method, $methodValue);
         } catch (Exception $exception) {
             Log::info($exception->getMessage());
             throw new Exception(QueryExceptionLibrary::message($exception), 422);
         }
+    }
+
+    private function executeQuery($requests, $orderColumn, $orderType, $method, $methodValue)
+    {
+        return ItemCategory::with('media')->where(function ($query) use ($requests) {
+            foreach ($requests as $key => $request) {
+                if (in_array($key, $this->itemCateFilter)) {
+                    $query->where($key, 'like', '%' . $request . '%');
+                }
+
+                if (in_array($key, $this->exceptFilter)) {
+                    $explodes = explode('|', $request);
+                    if (is_array($explodes)) {
+                        foreach ($explodes as $explode) {
+                            $query->where('id', '!=', $explode);
+                        }
+                    }
+                }
+            }
+        })->orderBy($orderColumn, $orderType)->$method(
+            $methodValue
+        );
     }
 
     /**

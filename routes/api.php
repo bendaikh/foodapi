@@ -607,6 +607,7 @@ Route::prefix('admin')->name('admin.')->middleware(['installed', 'apiKey', 'auth
     });
 
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
+        Route::get('/overview-stats', [DashboardController::class, 'overviewStats']);
         Route::get('/total-sales', [DashboardController::class, 'totalSales']);
         Route::get('/total-orders', [DashboardController::class, 'totalOrders']);
         Route::get('/total-customers', [DashboardController::class, 'totalCustomers']);
