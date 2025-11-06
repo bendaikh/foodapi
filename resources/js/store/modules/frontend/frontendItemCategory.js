@@ -9,7 +9,12 @@ export const frontendItemCategory = {
     },
     getters: {
         lists: function (state) {
-            return state.lists;
+            // Always sort by 'sort' field to ensure consistent ordering
+            return [...state.lists].sort((a, b) => {
+                const sortA = a.sort ?? 0;
+                const sortB = b.sort ?? 0;
+                return sortA - sortB;
+            });
         },
         show: function (state) {
             return state.show;

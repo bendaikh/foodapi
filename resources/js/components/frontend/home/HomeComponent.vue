@@ -83,7 +83,7 @@ export default {
         this.loading.isActive = true;
         this.$store.dispatch("frontendItemCategory/lists", {
             paginate: 0,
-            order_column: "id",
+            order_column: "sort",
             order_type: "asc",
             status: statusEnum.ACTIVE,
         }).then(res => {
