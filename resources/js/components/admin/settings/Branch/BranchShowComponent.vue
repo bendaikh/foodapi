@@ -121,12 +121,8 @@ import LoadingComponent from "../../components/LoadingComponent";
 import statusEnum from "../../../../enums/modules/statusEnum";
 import alertService from "../../../../services/alertService";
 import appService from "../../../../services/appService";
-import { Loader } from "google-maps";
+import { loadGoogleMaps } from "../../../../utils/googleMapsLoader";
 import _ from "lodash";
-import ENV from '../../../../config/env'
-
-const options = { libraries: ["places", "geometry", "drawing"] };
-const loader = new Loader(ENV.GOOGLE_MAP_KEY, options);
 
 export default {
     name: "BranchShowComponent",
@@ -199,7 +195,8 @@ export default {
             return appService.handleTab(event, targetID, targetButton, targetDiv, activeClass);
         },
         mainMap: async function (location, data) {
-            const google = await loader.load();
+            // Load Google Maps
+            const google = await loadGoogleMaps();
 
             const branchLocation = {
                 lat: location.lat,
@@ -209,7 +206,7 @@ export default {
             const map = new google.maps.Map(document.getElementById("the-google-map-for-zone"), {
                 center: branchLocation,
                 zoom: 15,
-                scrollwheel: false,
+                scrollwheel: false
             });
 
             let markers = [];

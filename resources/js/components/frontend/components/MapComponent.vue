@@ -16,13 +16,9 @@
 </template>
 
 <script>
-import { Loader } from "google-maps";
+import { loadGoogleMaps } from "../../../utils/googleMapsLoader";
 import LoadingContentComponent from "./LoadingContentComponent";
 import _ from "lodash";
-import ENV from '../../../config/env';
-
-const options = { libraries: ["places", "geometry", "drawing"] };
-const loader = new Loader(ENV.GOOGLE_MAP_KEY, options);
 
 export default {
     name: "MapComponent",
@@ -89,7 +85,8 @@ export default {
     },
     methods: {
         mainMap: async function (location) {
-            const google = await loader.load();
+            // Load Google Maps
+            const google = await loadGoogleMaps();
 
             const map = new google.maps.Map(this.$refs.theGoogleMap, {
                 center: location,
