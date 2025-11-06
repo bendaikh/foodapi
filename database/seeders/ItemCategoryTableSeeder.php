@@ -35,12 +35,13 @@ class ItemCategoryTableSeeder extends Seeder
     {
         $envService = new EnvEditor();
         if ($envService->getValue('DEMO')) {
-            foreach ($this->categories as $category) {
+            foreach ($this->categories as $index => $category) {
                 $itemCategory = ItemCategory::create([
                     'name'        => $category,
                     'slug'        => Str::slug($category),
                     'description' => null,
                     'status'      => Status::ACTIVE,
+                    'sort'        => $index + 1,
                 ]);
 
                 if(file_exists(public_path('/images/seeder/item-category/' . strtolower(str_replace(' ', '_', $category)) . '.png'))) {

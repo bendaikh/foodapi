@@ -294,7 +294,7 @@ class OrderService
                     OrderItem::insert($itemsArray);
                 }
 
-                $this->order->order_serial_no = date('dmy') . $this->order->id;
+                $this->order->order_serial_no = str_pad($this->order->id, 6, '0', STR_PAD_LEFT);
                 $this->order->total_tax       = $totalTax;
                 $this->order->save();
 
@@ -394,7 +394,7 @@ class OrderService
                     OrderItem::insert($itemsArray);
                 }
 
-                $this->order->order_serial_no = date('dmy') . $this->order->id;
+                $this->order->order_serial_no = str_pad($this->order->id, 6, '0', STR_PAD_LEFT);
                 $this->order->total_tax       = $totalTax;
                 $currentTime = Carbon::now();
                 $endTime = $currentTime->copy()->addMinutes(Settings::group('order_setup')->get('order_setup_schedule_order_slot_duration'));

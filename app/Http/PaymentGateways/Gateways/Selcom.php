@@ -51,7 +51,7 @@ class Selcom extends PaymentAbstract
                 "buyer_email"      => $order->user->email ?? '',
                 "buyer_name"       => $order->user->name ?? '',
                 "buyer_phone"      => $order->user->phone ?? '',
-                "amount"           => $order->total,
+                "amount"           => number_format($order->total, 2, '.', ''),
                 "currency"         => "TZS",
                 "buyer_remarks"    => "None",
                 "merchant_remarks" => "None",

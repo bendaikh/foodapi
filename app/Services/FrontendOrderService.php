@@ -162,7 +162,7 @@ class FrontendOrderService
                     OrderItem::insert($itemsArray);
                 }
 
-                $this->frontendOrder->order_serial_no = date('dmy') . $this->frontendOrder->id;
+                $this->frontendOrder->order_serial_no = str_pad($this->frontendOrder->id, 6, '0', STR_PAD_LEFT);
                 $this->frontendOrder->total_tax = $totalTax;
                 $this->frontendOrder->save();
 

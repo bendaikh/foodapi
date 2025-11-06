@@ -13,13 +13,14 @@ class ItemCategory extends Model implements HasMedia
     use InteractsWithMedia;
 
     protected $table = "item_categories";
-    protected $fillable = ['name', 'slug', 'description', 'status'];
+    protected $fillable = ['name', 'slug', 'description', 'status', 'sort'];
     protected $casts = [
         'id'          => 'integer',
         'name'        => 'string',
         'slug'        => 'string',
         'description' => 'string',
         'status'      => 'integer',
+        'sort'        => 'integer',
     ];
 
     public function getThumbAttribute(): string
