@@ -3517,6 +3517,10 @@ input:checked + div svg {
 .inset-0 {
   inset: 0px;
 }
+.inset-y-0 {
+  top: 0px;
+  bottom: 0px;
+}
 .-bottom-12 {
   bottom: -3rem;
 }
@@ -3919,9 +3923,6 @@ input:checked + div svg {
 .h-\[68px\] {
   height: 68px;
 }
-.h-\[70px\] {
-  height: 70px;
-}
 .h-\[72px\] {
   height: 72px;
 }
@@ -3949,6 +3950,9 @@ input:checked + div svg {
 }
 .h-screen {
   height: 100vh;
+}
+.min-h-\[70px\] {
+  min-height: 70px;
 }
 .\!w-fit {
   width: -moz-fit-content !important;
@@ -4069,9 +4073,6 @@ input:checked + div svg {
 .min-w-\[180px\] {
   min-width: 180px;
 }
-.min-w-\[200px\] {
-  min-width: 200px;
-}
 .min-w-\[97px\] {
   min-width: 97px;
 }
@@ -4081,11 +4082,11 @@ input:checked + div svg {
 .max-w-3xl {
   max-width: 48rem;
 }
-.max-w-\[100px\] {
-  max-width: 100px;
-}
 .max-w-\[120px\] {
   max-width: 120px;
+}
+.max-w-\[140px\] {
+  max-width: 140px;
 }
 .max-w-\[148px\] {
   max-width: 148px;

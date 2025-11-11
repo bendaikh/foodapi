@@ -158,55 +158,51 @@
 
                 <div class="mb-5" v-if="item.addons.length > 0">
                     <h3 class="text-sm leading-6 font-medium capitalize mb-2 text-heading">{{ $t('label.addons') }}</h3>
-                    <div class="swiper addon-swiper">
-                        <Swiper :speed="1000" slidesPerView="auto" :spaceBetween="16">
-                            <SwiperSlide v-for="addon in item.addons" :key="addon">
-                                <div class="!w-fit !relative">
-                                    <div @click.prevent="changeAddon(addon)"
-                                        class="addon cursor-pointer w-fit min-w-[200px] h-[70px] rounded-lg flex border border-[#EFF0F6]">
-                                        <img class="w-[68px] h-full object-cover ltr:rounded-l-lg rtl:rounded-r-lg flex-shrink-0"
-                                            :src="addon.thumb" alt="thumbnail">
-                                        <div class="ltr:rounded-r-lg rtl:rounded-l-lg w-full py-1 px-2">
-                                            <span
-                                                class="block text-xs text-ellipsis whitespace-nowrap overflow-hidden w-fit max-w-[100px] capitalize text-heading">
-                                                {{ addon.addon_item_name }}
-                                            </span>
-                                            <p v-if="addon.variation_names.length > 0"
-                                                class=" text-left text-[10px] leading-4 capitalize mb-1.5 cursor-pointer">
-                                                <span v-for="(variation, index) in addon.variation_names">
-                                                    {{ textShortener(variation.name, 8) }}
-                                                    <span v-if="index + 1 < addon.variation_names.length">,
-                                                        &nbsp;</span>
-                                                </span>
-                                            </p>
-                                            <span
-                                                class="block text-xs font-semibold text-heading ltr:text-left rtl:text-right">
-                                                {{ addon.total_currency_price }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="flex flex-col items-end justify-between h-full absolute top-0 ltr:right-0 rtl:left-0 z-10 p-2">
-                                        <button type="button" class="info-btn" data-modal="#item-info-modal"
-                                            @click.prevent="infoModalShow(addon.addon_item_name, addon.caution)">
-                                            <i
-                                                class="lab lab-information font-fill-paragraph transition lab-font-size-16"></i>
-                                        </button>
-
-                                        <div class="flex items-center indec-group">
-                                            <button @click.prevent="addonQuantityDecrement(addon.id)"
-                                                class="fa-solid fa-minus text-[8px] w-4 h-4 leading-3 text-center rounded-full border transition text-primary border-primary hover:bg-primary hover:text-white indec-minus"></button>
-                                            <input v-on:keypress="onlyNumber($event)"
-                                                v-on:keyup="addonQuantityUp(addon.id)" v-model="addonQuantity[addon.id]"
-                                                type="number"
-                                                class="text-center w-5 text-xs font-semibold text-heading indec-value">
-                                            <button @click.prevent="addonQuantityIncrement(addon.id)"
-                                                class="fa-solid fa-plus text-[8px] w-4 h-4 leading-3 text-center rounded-full border transition text-primary border-primary hover:bg-primary hover:text-white indec-plus"></button>
-                                        </div>
-                                    </div>
+                    <div class="addon-swiper flex flex-col gap-3">
+                        <div v-for="addon in item.addons" :key="addon" class="relative">
+                            <div @click.prevent="changeAddon(addon)"
+                                class="addon cursor-pointer w-full min-h-[70px] rounded-lg flex border border-[#EFF0F6]">
+                                <img class="w-[68px] h-full object-cover ltr:rounded-l-lg rtl:rounded-r-lg flex-shrink-0"
+                                    :src="addon.thumb" alt="thumbnail">
+                                <div class="ltr:rounded-r-lg rtl:rounded-l-lg w-full py-1 px-2">
+                                    <span
+                                        class="block text-xs text-ellipsis whitespace-nowrap overflow-hidden w-fit max-w-[140px] capitalize text-heading">
+                                        {{ addon.addon_item_name }}
+                                    </span>
+                                    <p v-if="addon.variation_names.length > 0"
+                                        class=" text-left text-[10px] leading-4 capitalize mb-1.5 cursor-pointer">
+                                        <span v-for="(variation, index) in addon.variation_names">
+                                            {{ textShortener(variation.name, 8) }}
+                                            <span v-if="index + 1 < addon.variation_names.length">,
+                                                &nbsp;</span>
+                                        </span>
+                                    </p>
+                                    <span
+                                        class="block text-xs font-semibold text-heading ltr:text-left rtl:text-right">
+                                        {{ addon.total_currency_price }}
+                                    </span>
                                 </div>
-                            </SwiperSlide>
-                        </Swiper>
+                            </div>
+                            <div
+                                class="flex flex-col items-end justify-between h-full absolute inset-y-0 ltr:right-0 rtl:left-0 z-10 p-2">
+                                <button type="button" class="info-btn" data-modal="#item-info-modal"
+                                    @click.prevent="infoModalShow(addon.addon_item_name, addon.caution)">
+                                    <i
+                                        class="lab lab-information font-fill-paragraph transition lab-font-size-16"></i>
+                                </button>
+
+                                <div class="flex items-center indec-group">
+                                    <button @click.prevent="addonQuantityDecrement(addon.id)"
+                                        class="fa-solid fa-minus text-[8px] w-4 h-4 leading-3 text-center rounded-full border transition text-primary border-primary hover:bg-primary hover:text-white indec-minus"></button>
+                                    <input v-on:keypress="onlyNumber($event)"
+                                        v-on:keyup="addonQuantityUp(addon.id)" v-model="addonQuantity[addon.id]"
+                                        type="number"
+                                        class="text-center w-5 text-xs font-semibold text-heading indec-value">
+                                    <button @click.prevent="addonQuantityIncrement(addon.id)"
+                                        class="fa-solid fa-plus text-[8px] w-4 h-4 leading-3 text-center rounded-full border transition text-primary border-primary hover:bg-primary hover:text-white indec-plus"></button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
