@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const webpack = require('webpack');
 /*
  |--------------------------------------------------------------------------
  | Mix Asset Management
@@ -10,4 +11,13 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js').vue().postCss('resources/css/app.css', 'public/css', [require("tailwindcss")])
+mix.js('resources/js/app.js', 'public/js').vue().postCss('resources/css/app.css', 'public/css', [require("tailwindcss")]);
+
+// Define Vue feature flags for production builds
+mix.webpackConfig({
+    plugins: [
+        new webpack.DefinePlugin({
+            __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
+        }),
+    ],
+});

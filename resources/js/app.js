@@ -3,7 +3,7 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-import {createApp} from 'vue';
+import {createApp, nextTick} from 'vue';
 import DefaultComponent from "./components/DefaultComponent";
 import router from './router';
 import store from './store';
@@ -53,6 +53,39 @@ axios.interceptors.request.use(
         return config;
     },
     error => Promise.reject(error),
+);
+
+// Response interceptor to handle 401 errors
+axios.interceptors.response.use(
+    response => response,
+    error => {
+        if (error.response && error.response.status === 401) {
+            // Clear auth state
+            store.dispatch('auth/loginDataReset');
+            
+            // Redirect to login page if not already there
+            // Use nextTick to ensure router is ready
+            nextTick(() => {
+                try {
+                    const currentRoute = router?.currentRoute?.value;
+                    if (currentRoute && currentRoute.name !== 'auth.login') {
+                        router.push({ name: 'auth.login' });
+                    }
+                } catch (e) {
+                    // Router might not be ready yet, try again after a short delay
+                    setTimeout(() => {
+                        try {
+                            router.push({ name: 'auth.login' });
+                        } catch (err) {
+                            // Fallback: reload the page to login
+                            window.location.href = '/login';
+                        }
+                    }, 100);
+                }
+            });
+        }
+        return Promise.reject(error);
+    }
 );
 /* End axios code */
 
