@@ -44,6 +44,8 @@ import PWAComponent from "../../components/admin/settings/pwa/PWAComponent";
 import WhatsappComponent from "../../components/admin/settings/Whatsapp/WhatsappComponent"
 import WhatsappListComponent from "../../components/admin/settings/Whatsapp/WhatsappListComponent";
 import LicenseComponent from "../../components/admin/settings/License/LicenseComponent";
+import DeliveryZoneComponent from "../../components/admin/settings/DeliveryZone/DeliveryZoneComponent";
+import DeliveryZoneListComponent from "../../components/admin/settings/DeliveryZone/DeliveryZoneListComponent";
 
 
 export default [
@@ -69,6 +71,31 @@ export default [
                     permissionUrl: "settings",
                     breadcrumb: "company",
                 },
+            },
+            {
+                path: "delivery-zones",
+                component: DeliveryZoneComponent,
+                name: "admin.settings.deliveryZone",
+                redirect: { name: "admin.settings.deliveryZone.list" },
+                meta: {
+                    isFrontend: false,
+                    auth: true,
+                    permissionUrl: "settings",
+                    breadcrumb: "delivery_zones",
+                },
+                children: [
+                    {
+                        path: "list",
+                        component: DeliveryZoneListComponent,
+                        name: "admin.settings.deliveryZone.list",
+                        meta: {
+                            isFrontend: false,
+                            auth: true,
+                            permissionUrl: "settings",
+                            breadcrumb: "",
+                        },
+                    },
+                ],
             },
             {
                 path: "site",

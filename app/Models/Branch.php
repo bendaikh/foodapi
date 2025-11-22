@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Branch extends Model
 {
@@ -24,4 +25,12 @@ class Branch extends Model
         'zone'      => 'string',
         'status'    => 'integer',
     ];
+
+    /**
+     * Get the delivery zones for the branch.
+     */
+    public function deliveryZones(): HasMany
+    {
+        return $this->hasMany(DeliveryZone::class)->where('status', \App\Enums\Status::ACTIVE)->orderBy('sort_order', 'asc');
+    }
 }

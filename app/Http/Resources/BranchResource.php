@@ -27,8 +27,10 @@ class BranchResource extends JsonResource
             "zip_code"  => $this->zip_code,
             "address"   => $this->address,
             "status"    => $this->status,
-            "zone"      => $this->zone === null ? '' : $this->zone
-
+            "zone"      => $this->zone === null ? '' : $this->zone,
+            "delivery_zones" => $this->whenLoaded('deliveryZones', function () {
+                return DeliveryZoneResource::collection($this->deliveryZones);
+            })
         ];
     }
 }

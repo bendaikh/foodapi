@@ -11,10 +11,15 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Requests\BranchRequest;
 use App\Http\Requests\PaginateRequest;
 use App\Libraries\QueryExceptionLibrary;
+use App\Services\DeliveryZoneService;
 use Smartisan\Settings\Facades\Settings;
 
 class BranchService
 {
+    public function __construct(public DeliveryZoneService $deliveryZoneService)
+    {
+    }
+
     protected array $branchFilter = [
         'name',
         'email',
@@ -194,6 +199,37 @@ class BranchService
                 }
             }
             throw new Exception(trans('all.message.out_of_service_area'), 422);
+        } catch (Exception $exception) {
+            Log::info($exception->getMessage());
+            throw new Exception(QueryExceptionLibrary::message($exception), 422);
+        }
+    }
+
+    /**
+     * Get delivery price using delivery zones based on customer location
+     *
+     * @throws Exception
+     */
+    public function getDeliveryPriceByZone(Request $request, Branch $branch)
+    {
+        try {
+            $request->validate([
+                'latitude' => ['required', 'numeric'],
+                'longitude' => ['required', 'numeric'],
+            ]);
+
+            $result = $this->deliveryZoneService->getDeliveryPrice(
+                $branch,
+                (float) $request->input('latitude'),
+                (float) $request->input('longitude')
+            );
+
+            return [
+                'branch' => $branch,
+                'zone' => $result['zone'],
+                'delivery_price' => $result['delivery_price'],
+                'distance_km' => round($result['distance_km'], 2),
+            ];
         } catch (Exception $exception) {
             Log::info($exception->getMessage());
             throw new Exception(QueryExceptionLibrary::message($exception), 422);

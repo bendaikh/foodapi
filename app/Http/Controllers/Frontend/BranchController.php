@@ -58,4 +58,22 @@ class BranchController extends Controller
             return response(['status' => false, 'message' => $exception->getMessage()], 422);
         }
     }
+
+    public function getDeliveryPriceByZone(Request $request, Branch $branch)
+    {
+        try {
+            $result = $this->branchService->getDeliveryPriceByZone($request, $branch);
+            return response([
+                'status' => true,
+                'data' => [
+                    'branch' => new BranchResource($result['branch']),
+                    'zone' => $result['zone'],
+                    'delivery_price' => $result['delivery_price'],
+                    'distance_km' => $result['distance_km'],
+                ]
+            ]);
+        } catch (Exception $exception) {
+            return response(['status' => false, 'message' => $exception->getMessage()], 422);
+        }
+    }
 }

@@ -31,6 +31,7 @@ use App\Http\Controllers\Admin\EmployeeController;
 use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\PosOrderController;
 use App\Http\Controllers\Admin\TimeSlotController;
+use App\Http\Controllers\Admin\DeliveryZoneController;
 use App\Http\Controllers\Admin\TimezoneController;
 use App\Http\Controllers\Admin\WhatsappController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -99,6 +100,7 @@ use App\Http\Controllers\Frontend\TimeSlotController as FrontendTimeSlotControll
 use App\Http\Controllers\Frontend\SubscriberController as FrontendSubscriberController;
 use App\Http\Controllers\Frontend\CountryCodeController as FrontendCountryCodeController;
 use App\Http\Controllers\Frontend\ItemCategoryController as FrontendItemCategoryController;
+use App\Http\Controllers\Frontend\DeliveryZoneController as FrontendDeliveryZoneController;
 use App\Http\Controllers\Frontend\DeliveryBoyOrderController as FrontendDeliveryBoyOrderController;
 
 
@@ -364,6 +366,16 @@ Route::prefix('admin')->name('admin.')->middleware(['installed', 'apiKey', 'auth
             Route::get('/file-list/{language:code}', [LanguageController::class, 'fileList']);
             Route::post('/file-text', [LanguageController::class, 'fileText']);
             Route::post('/file-text/store', [LanguageController::class, 'fileTextStore']);
+        });
+
+        Route::prefix('delivery-zone')->name('delivery-zone.')->group(function () {
+            Route::get('/', [DeliveryZoneController::class, 'index']);
+            Route::get('/show/{deliveryZone}', [DeliveryZoneController::class, 'show']);
+            Route::post('/', [DeliveryZoneController::class, 'store']);
+            Route::match(['put', 'patch'], '/{deliveryZone}', [DeliveryZoneController::class, 'update']);
+            Route::delete('/{deliveryZone}', [DeliveryZoneController::class, 'destroy']);
+            Route::get('/branch/{branch}', [DeliveryZoneController::class, 'getByBranch']);
+            Route::post('/branch/{branch}/detect', [DeliveryZoneController::class, 'detectZone']);
         });
 
         Route::prefix('notification-alert')->name('notification-alert.')->group(function () {
@@ -717,6 +729,13 @@ Route::prefix('frontend')->name('frontend.')->middleware(['installed', 'apiKey',
         Route::get('/show/{branch}', [FrontendBranchController::class, 'show']);
         Route::get('/whatsapp-setup/{branchId}', [FrontendBranchController::class, 'whatsappSetup']);
         Route::get('/lat-long', [FrontendBranchController::class, 'showByLatLong']);
+        Route::post('/{branch}/delivery-price', [FrontendBranchController::class, 'getDeliveryPriceByZone']);
+    });
+
+    Route::prefix('delivery-zone')->name('delivery-zone.')->group(function () {
+        Route::get('/', [FrontendDeliveryZoneController::class, 'index']);
+        Route::get('/branch/{branch}', [FrontendDeliveryZoneController::class, 'getByBranch']);
+        Route::post('/branch/{branch}/detect', [FrontendDeliveryZoneController::class, 'detectZone']);
     });
 
     Route::prefix('language')->name('language.')->group(function () {

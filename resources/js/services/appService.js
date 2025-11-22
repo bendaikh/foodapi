@@ -32,12 +32,11 @@ export default {
     },
 
     modalShow: function (id = '.modal') {
-        let modalButton = document?.querySelectorAll("[data-modal]");
-        modalButton?.forEach((modalBtn) => {
-            const modalTarget = document?.querySelector(id);
-            modalTarget?.classList?.add("active");
+        const modalTarget = document?.querySelector(id);
+        if (modalTarget) {
+            modalTarget.classList.add("active");
             document.body.style.overflowY = "hidden";
-        });
+        }
     },
 
     modalHide: function (id = ".modal") {

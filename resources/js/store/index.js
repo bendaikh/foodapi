@@ -12,6 +12,7 @@ import { item } from "./modules/item";
 import { itemVariation } from "./modules/itemVariation";
 import { onlineOrder } from "./modules/onlineOrder";
 import { tax } from "./modules/tax";
+import { deliveryZone } from "./modules/deliveryZone";
 import { currency } from "./modules/currency";
 import { mail } from "./modules/mail";
 import { menuSection } from "./modules/menuSection";
@@ -66,6 +67,7 @@ import { frontendTimeSlot } from "./modules/frontend/frontendTimeSlot";
 import { frontendItem } from "./modules/frontend/frontendItem";
 import { frontendOffer } from './modules/frontend/frontendOffer';
 import { frontendCoupon } from "./modules/frontend/frontendCoupon";
+import { frontendDeliveryZone } from "./modules/frontend/frontendDeliveryZone";
 import { countryCode } from './modules/countryCode';
 import { frontendOrder } from "./modules/frontend/frontendOrder";
 import { frontendSignup } from "./modules/frontend/frontendSignup";
@@ -109,6 +111,7 @@ export default new createStore({
         item,
         itemVariation,
         tax,
+        deliveryZone,
         currency,
         mail,
         pushNotification,
@@ -164,6 +167,7 @@ export default new createStore({
         frontendItem,
         frontendOffer,
         frontendCoupon,
+        frontendDeliveryZone,
         countryCode,
         frontendOrder,
         frontendSignup,

@@ -50,6 +50,15 @@
                                     <AddressComponent :getLocation="updateAddress" :props="addressProps" />
                                 </div>
                             </div>
+                            <div class="mb-3">
+                                <label class="db-field-title">{{ $t('label.delivery_zone') }}</label>
+                                <select class="db-field-control" v-model="selectedZoneId" @change="applyZone">
+                                    <option :value="null">{{ $t('label.select_address') }}</option>
+                                    <option v-for="zone in deliveryZones" :key="zone.id" :value="zone.id">
+                                        {{ zone.zone_name }} - {{ currencyFormat(zone.delivery_price, setting.site_digit_after_decimal_point, setting.site_default_currency_symbol, setting.site_currency_position) }}
+                                    </option>
+                                </select>
+                            </div>
                             <div v-if="addresses.length > 0" class="grid grid-cols-2 sm:grid-cols-3 gap-3 active-group">
                                 <label @click="changeAddress($event, address)"
                                     :class="checkoutProps.form.address_id === address.id ? 'active' : ''"
@@ -566,7 +575,8 @@ export default {
             whatsappSetup: {
                 status: activityEnum.DISABLE,
                 phone: null,
-            }
+            },
+            selectedZoneId: null
         }
     },
     computed: {
@@ -578,6 +588,9 @@ export default {
         },
         branches: function () {
             return this.$store.getters['frontendBranch/lists'];
+        },
+        deliveryZones: function () {
+            return this.$store.getters['frontendDeliveryZone/lists'];
         },
         branch: function () {
             return this.$store.getters['frontendBranch/show'];
@@ -658,6 +671,7 @@ export default {
         }).catch((err) => {
             this.loading.isActive = false;
         });
+        this.$store.dispatch("frontendDeliveryZone/lists").then().catch();
 
         this.checkoutProps.form.order_type = this.orderType;
 
@@ -745,6 +759,14 @@ export default {
             this.checkoutProps.form.address_id = address.id;
             this.deliveryChargeCalculation();
         },
+        applyZone: function () {
+            const zone = this.deliveryZones.find(z => z.id === this.selectedZoneId);
+            if (zone) {
+                this.checkoutProps.form.delivery_charge = parseFloat(zone.delivery_price);
+            } else {
+                this.deliveryChargeCalculation();
+            }
+        },
         changeBranch: function (branch) {
             this.mapShow = false;
             this.location.lat = branch.latitude;
@@ -782,6 +804,14 @@ export default {
             this.deliveryChargeCalculation();
         },
         deliveryChargeCalculation: function () {
+            if (this.selectedZoneId) {
+                const zone = this.deliveryZones.find(z => z.id === this.selectedZoneId);
+                if (zone) {
+                    this.checkoutProps.form.delivery_charge = parseFloat(zone.delivery_price);
+                    this.branchWhatsappSetup();
+                    return;
+                }
+            }
             if (this.checkoutProps.form.order_type === orderTypeEnum.DELIVERY && (typeof this.localAddress.latitude !== 'undefined' && this.localAddress.latitude !== '')) {
                 this.$store.dispatch("frontendBranch/showByLatLong", {
                     latitude: this.localAddress.latitude,

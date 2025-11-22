@@ -91,7 +91,9 @@
         "point_setup": "Point Setup",
         "point_balance_report": "Point Balance Report",
         "rider_tips": "Rider Tips",
-        "reward_points": "Reward points"
+        "reward_points": "Reward points",
+        "delivery_zones": "Delivery Zones",
+        "delivery_zone": "Delivery Zone"
     },
     "label": {
         "whatsapp": "WhatsApp",
@@ -101,6 +103,8 @@
         "next": "Next",
         "default": "Default",
         "action": "Action",
+        "add": "Add",
+        "edit": "Edit",
         "id": "Id",
         "name": "Name",
         "email": "Email",
@@ -629,6 +633,8 @@
         "schedule": "Schedule",
         "online": "Online",
         "delivery_zone": "Delivery Zone",
+        "zone_name": "Zone Name",
+        "delivery_price": "Delivery Price",
         "order_payment": "Order Payment",
         "total_amount": "Total Amount",
         "select_payment_method": "Select Payment Method",
@@ -648,6 +654,10 @@
         "maximum_applicable_points_for_per_order": "Maximum applicable points for per order",
         "reward_points": "Reward points",
         "apply_rewarded_points": "Apply rewarded points"
+    },
+    "validation": {
+        "zone_name_required": "Zone name is required",
+        "delivery_price_numeric_gt_zero": "Delivery price must be numeric and greater than 0"
     },
     "button": {
         "add": "Add",

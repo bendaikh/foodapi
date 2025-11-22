@@ -70,6 +70,10 @@
                 <i class="lab lab-currencies text-sm"></i>
                 {{ $t("menu.currencies") }}
             </router-link>
+            <router-link :to="{ name: 'admin.settings.deliveryZone' }" class="db-tab-btn">
+                <i class="lab lab-location text-sm"></i>
+                {{ $t("menu.delivery_zones") }}
+            </router-link>
             <router-link :to="{ name: 'admin.settings.itemCategory' }" class="db-tab-btn">
                 <i class="lab lab-item-categories text-sm"></i>
                 {{ $t("menu.item_categories") }}
