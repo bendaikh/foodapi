@@ -26,6 +26,10 @@
                 <i class="lab lab-order-setup text-sm"></i>
                 {{ $t("menu.order_setup") }}
             </router-link>
+            <router-link :to="{ name: 'admin.settings.deliveryZone' }" class="db-tab-btn">
+                <i class="lab lab-location text-sm"></i>
+                {{ $t("menu.delivery_zones") }}
+            </router-link>
             <router-link :to="{ name: 'admin.settings.otp' }" class="db-tab-btn">
                 <i class="lab lab-otp text-sm"></i>
                 {{ $t("menu.otp") }}
@@ -69,10 +73,6 @@
             <router-link :to="{ name: 'admin.settings.currency' }" class="db-tab-btn">
                 <i class="lab lab-currencies text-sm"></i>
                 {{ $t("menu.currencies") }}
-            </router-link>
-            <router-link :to="{ name: 'admin.settings.deliveryZone' }" class="db-tab-btn">
-                <i class="lab lab-location text-sm"></i>
-                {{ $t("menu.delivery_zones") }}
             </router-link>
             <router-link :to="{ name: 'admin.settings.itemCategory' }" class="db-tab-btn">
                 <i class="lab lab-item-categories text-sm"></i>

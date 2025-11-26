@@ -89,47 +89,6 @@
                         </div>
                     </div>
                 </fieldset>
-                <fieldset class="p-4 mb-6 border border-[#DBDEE0]">
-                    <legend class="py-1.5 px-4 text-base font-semibold capitalize border border-[#DBDEE0] text-primary">
-                        {{ $t('menu.delivery_charge') }}
-                    </legend>
-                    <div class="form-row">
-                        <div class="form-col-12 sm:form-col-6">
-                            <label for="order_setup_free_delivery_kilometer" class="db-field-title required">
-                                {{ $t("label.free_delivery_kilometer") }}
-                            </label>
-                            <input v-on:keypress="floatNumber($event)"
-                                v-model="form.order_setup_free_delivery_kilometer"
-                                v-bind:class="errors.order_setup_free_delivery_kilometer ? 'invalid' : ''" type="text"
-                                id="order_setup_free_delivery_kilometer" class="db-field-control" />
-                            <small class="db-field-alert" v-if="errors.order_setup_free_delivery_kilometer">{{
-                                errors.order_setup_free_delivery_kilometer[0]
-                            }}</small>
-                        </div>
-                        <div class="form-col-12 sm:form-col-6">
-                            <label for="order_setup_basic_delivery_charge" class="db-field-title required">
-                                {{ $t("label.basic_delivery_charge") }}
-                            </label>
-                            <input v-on:keypress="floatNumber($event)" v-model="form.order_setup_basic_delivery_charge"
-                                v-bind:class="errors.order_setup_basic_delivery_charge ? 'invalid' : ''" type="text"
-                                id="order_setup_basic_delivery_charge" class="db-field-control" />
-                            <small class="db-field-alert" v-if="errors.order_setup_basic_delivery_charge">{{
-                                errors.order_setup_basic_delivery_charge[0]
-                            }}</small>
-                        </div>
-                        <div class="form-col-12 sm:form-col-6">
-                            <label for="order_setup_charge_per_kilo" class="db-field-title required">
-                                {{ $t("label.charge_per_kilo") }}
-                            </label>
-                            <input v-on:keypress="floatNumber($event)" v-model="form.order_setup_charge_per_kilo"
-                                v-bind:class="errors.order_setup_charge_per_kilo ? 'invalid' : ''" type="text"
-                                id="order_setup_charge_per_kilo" class="db-field-control" />
-                            <small class="db-field-alert" v-if="errors.order_setup_charge_per_kilo">{{
-                                errors.order_setup_charge_per_kilo[0]
-                            }}</small>
-                        </div>
-                    </div>
-                </fieldset>
                 <button type="submit" class="db-btn text-white bg-primary">
                     <i class="lab lab-save"></i>
                     <span>{{ $t("button.save") }}</span>
@@ -158,10 +117,7 @@ export default {
                 order_setup_food_preparation_time: null,
                 order_setup_schedule_order_slot_duration: null,
                 order_setup_takeaway: null,
-                order_setup_delivery: null,
-                order_setup_free_delivery_kilometer: null,
-                order_setup_basic_delivery_charge: null,
-                order_setup_charge_per_kilo: null
+                order_setup_delivery: null
             },
             enums: {
                 activityEnum: activityEnum
@@ -179,10 +135,7 @@ export default {
                     order_setup_food_preparation_time: res.data.data.order_setup_food_preparation_time,
                     order_setup_schedule_order_slot_duration: res.data.data.order_setup_schedule_order_slot_duration,
                     order_setup_takeaway: res.data.data.order_setup_takeaway,
-                    order_setup_delivery: res.data.data.order_setup_delivery,
-                    order_setup_free_delivery_kilometer: res.data.data.order_setup_free_delivery_kilometer,
-                    order_setup_basic_delivery_charge: res.data.data.order_setup_basic_delivery_charge,
-                    order_setup_charge_per_kilo: res.data.data.order_setup_charge_per_kilo
+                    order_setup_delivery: res.data.data.order_setup_delivery
                 }
                 this.loading.isActive = false;
             }).catch((err) => {
