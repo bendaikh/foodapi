@@ -788,15 +788,21 @@ export default {
                     longitude: this.localAddress.longitude
                 }).then((branchRes) => {
                     this.checkoutProps.form.branch_id = branchRes.data.data.id;
-                    const distance = appService.distance(parseFloat(this.localAddress.latitude), parseFloat(this.localAddress.longitude), parseFloat(branchRes.data.data.latitude), parseFloat(branchRes.data.data.longitude));
-
-                    if (distance > this.setting.order_setup_free_delivery_kilometer) {
-                        let extraDistance = distance - parseFloat(this.setting.order_setup_free_delivery_kilometer);
-                        this.checkoutProps.form.delivery_charge = (extraDistance * parseFloat(this.setting.order_setup_charge_per_kilo) + parseFloat(this.setting.order_setup_basic_delivery_charge));
-                    } else {
-                        this.checkoutProps.form.delivery_charge = parseFloat(this.setting.order_setup_basic_delivery_charge);
-                    }
-                    this.branchWhatsappSetup();
+                    
+                    // Use delivery zone to get delivery price
+                    this.$store.dispatch("frontendDeliveryZone/detectZone", {
+                        branch_id: branchRes.data.data.id,
+                        latitude: this.localAddress.latitude,
+                        longitude: this.localAddress.longitude
+                    }).then((zoneRes) => {
+                        this.checkoutProps.form.delivery_charge = parseFloat(zoneRes.data.data.delivery_price);
+                        this.branchWhatsappSetup();
+                    }).catch((err) => {
+                        // If no zone found, set delivery charge to 0 and show message
+                        this.checkoutProps.form.delivery_charge = 0;
+                        alertService.info(err.response?.data?.message || this.$t('message.out_of_delivery_area'));
+                        this.branchWhatsappSetup();
+                    });
                 }).catch((err) => {
                     this.loading.isActive = false;
                     this.checkoutProps.form.branch_id = null;
