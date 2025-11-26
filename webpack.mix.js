@@ -11,7 +11,7 @@ const webpack = require('webpack');
  |
  */
 
-mix.js('resources/js/app.js', 'public/js').vue().postCss('resources/css/app.css', 'public/css', [require("tailwindcss")]);
+mix.js('resources/js/app.js', 'public/js').vue().postCss('resources/css/app.css', 'public/css', [require("tailwindcss")]).version();
 
 // Define Vue feature flags for production builds
 mix.webpackConfig({
